@@ -1,0 +1,227 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Memory</title>
+	<link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+	<div id="container">
+		<h4>Choose Difficulty</h4>
+		<button onclick="start(4)">4x4</button>
+		<button onclick="start(6)">6x6</button>
+		<button onclick="start(8)">8x8</button>
+	</div>
+	
+	<script>
+	
+		function get(x)
+		{
+			return document.getElementById(x);
+		}
+	
+		var diff = 0;
+		var photoNumber = 0;
+		var usedPhoto = [0];
+		var currentPhoto = 0;
+		
+		var box = [0,0,0];
+		var rotation = [0,0,0];
+		var id = [0,0,0];
+		var currentTurn = 1;
+		var currentId = 0;
+		var currentBox = 0;
+		
+		var pairs = 0;
+		
+		var turning = 0;
+		
+		var points = 0;
+		
+		var boxes = [0];
+	
+		function start(x)
+		{
+			diff = x;
+			photoNumber = diff * diff / 2;
+			pairs = photoNumber;
+			for(i=1;i<=photoNumber;i++)
+			{
+				usedPhoto[i] = 0;
+			}
+			
+			var field = "<table>";
+			for(i=1;i<=x;i++)
+			{
+				field += "<tr>"
+				for(j=1;j<=x;j++)
+				{
+					do
+					{
+						currentPhoto = Math.ceil(Math.random() * photoNumber);				
+					}while(usedPhoto[currentPhoto] == 2)
+					usedPhoto[currentPhoto]++;
+					boxes[i+''+j] = currentPhoto;
+					field += "<td><div class='box' id='b"+i+''+j+"' onclick='check(this.id)'><img src='photo/reverse.jpg'></div></td>";
+				}
+				field += "</tr>";
+			}
+			field += "</table>";
+			
+			get("container").innerHTML = field;
+		}
+		
+		function check(x)
+		{
+			if(turning == 0 && currentBox != x[1]+''+x[2])
+			{
+				turning = 1;
+				currentBox = x[1]+''+x[2];
+				box[currentTurn] = boxes[currentBox];
+				currentId = x;
+				id[currentTurn] = currentId;
+				turn1();
+			}
+		}
+		
+		function turn1()
+		{
+			if(rotation[currentTurn] < 90)
+			{
+				rotation[currentTurn] += 5;
+				get(currentId).style.transform = "rotateY("+rotation[currentTurn]+"deg)";
+				setTimeout(turn1,10);
+			}
+			else
+			{
+				get(currentId).innerHTML = "<img src='photo/"+boxes[currentBox]+".jpg'>";
+				rotation[currentTurn] = 270;
+				turn2();
+			}
+		}
+		
+		function turn2()
+		{
+			if(rotation[currentTurn] < 360)
+			{
+				rotation[currentTurn] += 5;
+				get(currentId).style.transform = "rotateY("+rotation[currentTurn]+"deg)";
+				setTimeout(turn2,10);
+			}
+			else
+			{
+				if(currentTurn == 1)
+				{
+					currentTurn++;
+					turning = 0;
+				}
+				else
+				{
+					checkPair();
+				}
+			}
+		}
+		
+		function checkPair()
+		{
+			if(box[1] == box[2])
+			{
+				points+=5;
+				get(id[1]).onclick = "";
+				get(id[2]).onclick = "";
+				box = [0,0,0];
+				rotation = [0,0,0];
+				id = [0,0,0];
+				currentTurn = 1;
+				currentId = 0;
+				currentBox = 0;
+				turning = 0;
+				pairs--;
+				if(pairs == 0)
+				{
+					alert("Koniec gry. Twój wynik to: "+points);
+				}
+			}
+			else
+			{
+				points--;
+				setTimeout(unturn, 500);
+			}
+		}
+		
+		function unturn()
+		{
+			if(rotation[1] > 270)
+			{
+				rotation[1] -= 5;
+				get(id[1]).style.transform = "rotateY("+rotation[1]+"deg)";
+				get(id[2]).style.transform = "rotateY("+rotation[1]+"deg)";
+				setTimeout(unturn,10);
+			}
+			else if(rotation[1] == 270)
+			{
+				rotation[1] = 90;
+				get(id[1]).innerHTML = "<img src='photo/reverse.jpg'>";
+				get(id[2]).innerHTML = "<img src='photo/reverse.jpg'>";	
+				setTimeout(unturn,10);
+			}
+			else if(rotation[1] > 0)
+			{
+				rotation[1] -= 5;
+				get(id[1]).style.transform = "rotateY("+rotation[1]+"deg)";
+				get(id[2]).style.transform = "rotateY("+rotation[1]+"deg)";
+				setTimeout(unturn,10);
+			}
+			else
+			{
+				box = [0,0,0];
+				rotation = [0,0,0];
+				id = [0,0,0];
+				currentTurn = 1;
+				currentId = 0;
+				currentBox = 0;
+				turning = 0;
+			}
+		}
+	
+	</script>
+	
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

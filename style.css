@@ -1,0 +1,33 @@
+html, body
+{
+	margin: 0;
+	padding: 0;
+	text-align: center;
+	width: 100%;
+	hegith: 100%;
+	font-family: verdana;
+}
+
+#container
+{
+	margin-top: 80px;
+	padding: 30px;
+	text-align: center;
+}
+
+#container > table
+{
+	margin: auto;
+}
+
+.box
+{
+	width: 80px;
+	height: 80px;
+}
+
+.box > img
+{
+	width: 80px;
+	height: 80px;
+}
